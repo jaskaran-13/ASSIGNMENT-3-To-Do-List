@@ -107,6 +107,22 @@ body {
     text-align: center;
 }
 
+.status-card {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    background: linear-gradient(135deg, #f5f3ff, #eff6ff);
+    border: 1px solid #ddd6fe;
+    border-radius: 14px;
+    padding: 14px 18px;
+    box-shadow: 0 8px 16px rgba(99, 102, 241, 0.08);
+}
+
+.status-card p {
+    font-weight: 700;
+    color: #4338ca;
+}
 /* ===================================
    Task List
 =================================== */

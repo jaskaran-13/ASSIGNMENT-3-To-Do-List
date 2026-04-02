@@ -7,22 +7,31 @@ const todoInput = document.getElementById("todo-input");
 const addBtn = document.getElementById("add-btn");
 const todoList = document.getElementById("todo-list");
 const taskStatus = document.getElementById("task-status");
+const pendingStatus = document.getElementById("pending-status");
+const completedStatus = document.getElementById("completed-status");
 const errorMessage = document.getElementById("error-message");
 
 // Track total number of tasks currently displayed
 let taskCount = 0;
 
 /**
- * Update the text showing how many tasks exist
+ * Count how many tasks are completed
+ * @returns {number}
+ */
+function getCompletedTaskCount() {
+    return document.querySelectorAll(".todo-item.completed").length;
+}
+
+/**
+ * Update task summary values
  */
 function updateTaskStatus() {
-    if (taskCount === 0) {
-        taskStatus.textContent = "You have 0 tasks.";
-    } else if (taskCount === 1) {
-        taskStatus.textContent = "You have 1 task.";
-    } else {
-        taskStatus.textContent = `You have ${taskCount} tasks.`;
-    }
+    const completedCount = getCompletedTaskCount();
+    const pendingCount = taskCount - completedCount;
+
+    taskStatus.textContent = `Total Tasks: ${taskCount}`;
+    pendingStatus.textContent = `Pending: ${pendingCount}`;
+    completedStatus.textContent = `Completed: ${completedCount}`;
 }
 
 /**
@@ -79,6 +88,8 @@ function handleCheckboxChange(taskItem, checkbox) {
         taskItem.classList.remove("completed");
         moveActiveTaskUp(taskItem);
     }
+
+    updateTaskStatus();
 }
 
 /**

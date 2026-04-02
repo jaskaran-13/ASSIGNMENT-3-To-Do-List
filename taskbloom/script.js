@@ -12,21 +12,42 @@ const completedStatus = document.getElementById("completed-status");
 const errorMessage = document.getElementById("error-message");
 const completeSound = document.getElementById("complete-sound");
 
-// Track total number of tasks currently displayed
-let taskCount = 0;
+// Store tasks in memory
+let tasks = [];
+
+/**
+ * Save tasks to localStorage
+ */
+function saveTasks() {
+    localStorage.setItem("taskbloom-tasks", JSON.stringify(tasks));
+}
+
+/**
+ * Load tasks from localStorage
+ */
+function loadTasks() {
+    const storedTasks = localStorage.getItem("taskbloom-tasks");
+
+    if (storedTasks) {
+        tasks = JSON.parse(storedTasks);
+    } else {
+        tasks = [];
+    }
+}
 
 /**
  * Count how many tasks are completed
  * @returns {number}
  */
 function getCompletedTaskCount() {
-    return document.querySelectorAll(".todo-item.completed").length;
+    return tasks.filter(task => task.completed).length;
 }
 
 /**
  * Update task summary values
  */
 function updateTaskStatus() {
+    const taskCount = tasks.length;
     const completedCount = getCompletedTaskCount();
     const pendingCount = taskCount - completedCount;
 
@@ -61,60 +82,98 @@ function playCompletionSound() {
 }
 
 /**
- * Move a completed task to the bottom of the task list
- * @param {HTMLElement} taskItem
+ * Create a task object
+ * @param {string} text
+ * @returns {{id: number, text: string, completed: boolean}}
  */
-function moveCompletedToBottom(taskItem) {
-    todoList.appendChild(taskItem);
+function createTaskObject(text) {
+    return {
+        id: Date.now(),
+        text: text,
+        completed: false
+    };
 }
 
 /**
- * Move an active task above the first completed task
- * @param {HTMLElement} taskItem
+ * Create a new task element
+ * @param {{id: number, text: string, completed: boolean}} task
+ * @returns {HTMLElement}
  */
-function moveActiveTaskUp(taskItem) {
-    const allTasks = Array.from(todoList.children);
+function createTaskElement(task) {
+    const li = document.createElement("li");
+    li.className = "todo-item adding";
+    li.dataset.id = task.id;
 
-    const firstCompletedTask = allTasks.find(task =>
-        task.classList.contains("completed")
-    );
+    if (task.completed) {
+        li.classList.add("completed");
+    }
 
-    if (firstCompletedTask) {
-        todoList.insertBefore(taskItem, firstCompletedTask);
-    } else {
+    li.innerHTML = `
+        <label class="task-left">
+            <input type="checkbox" class="task-checkbox" ${task.completed ? "checked" : ""}>
+            <span class="task-text">${task.text}</span>
+        </label>
+        <button class="delete-btn">Delete</button>
+    `;
+
+    return li;
+}
+
+/**
+ * Render all tasks to the page
+ */
+function renderTasks() {
+    todoList.innerHTML = "";
+
+    const activeTasks = tasks.filter(task => !task.completed);
+    const completedTasks = tasks.filter(task => task.completed);
+    const orderedTasks = [...activeTasks, ...completedTasks];
+
+    orderedTasks.forEach(task => {
+        const taskItem = createTaskElement(task);
         todoList.appendChild(taskItem);
-    }
-}
+        attachTaskEvents(taskItem);
+    });
 
-/**
- * Handle checkbox state changes for a task
- * @param {HTMLElement} taskItem
- * @param {HTMLInputElement} checkbox
- */
-function handleCheckboxChange(taskItem, checkbox) {
-    if (checkbox.checked) {
-        taskItem.classList.add("completed");
-        moveCompletedToBottom(taskItem);
-        playCompletionSound();
-    } else {
-        taskItem.classList.remove("completed");
-        moveActiveTaskUp(taskItem);
-    }
+    requestAnimationFrame(() => {
+        document.querySelectorAll(".todo-item.adding").forEach(item => {
+            item.classList.remove("adding");
+        });
+    });
 
     updateTaskStatus();
 }
 
 /**
- * Delete a task item from the list with animation
- * @param {HTMLElement} taskItem
+ * Toggle a task's completed state
+ * @param {number} taskId
+ * @param {boolean} isCompleted
  */
-function deleteTask(taskItem) {
+function toggleTaskCompletion(taskId, isCompleted) {
+    tasks = tasks.map(task =>
+        task.id === taskId ? { ...task, completed: isCompleted } : task
+    );
+
+    if (isCompleted) {
+        playCompletionSound();
+    }
+
+    saveTasks();
+    renderTasks();
+}
+
+/**
+ * Delete a task by id with animation
+ * @param {HTMLElement} taskItem
+ * @param {number} taskId
+ */
+function deleteTask(taskItem, taskId) {
     taskItem.classList.add("removing");
 
     setTimeout(() => {
-        taskItem.remove();
-        taskCount--;
-        updateTaskStatus();
+        tasks = tasks.filter(task => task.id !== taskId);
+        saveTasks();
+        renderTasks();
     }, 300);
 }
 
@@ -125,34 +184,15 @@ function deleteTask(taskItem) {
 function attachTaskEvents(taskItem) {
     const checkbox = taskItem.querySelector(".task-checkbox");
     const deleteBtn = taskItem.querySelector(".delete-btn");
+    const taskId = Number(taskItem.dataset.id);
 
     checkbox.addEventListener("change", function () {
-        handleCheckboxChange(taskItem, checkbox);
+        toggleTaskCompletion(taskId, checkbox.checked);
     });
 
     deleteBtn.addEventListener("click", function () {
-        deleteTask(taskItem);
+        deleteTask(taskItem, taskId);
     });
-}
-
-/**
- * Create a new task element
- * @param {string} taskText
- * @returns {HTMLElement}
- */
-function createTaskElement(taskText) {
-    const li = document.createElement("li");
-    li.className = "todo-item adding";
-
-    li.innerHTML = `
-        <label class="task-left">
-            <input type="checkbox" class="task-checkbox">
-            <span class="task-text">${taskText}</span>
-        </label>
-        <button class="delete-btn">Delete</button>
-    `;
-
-    return li;
 }
 
 /**
@@ -168,18 +208,14 @@ function addTask() {
 
     clearError();
 
-    const taskItem = createTaskElement(taskText);
-    todoList.appendChild(taskItem);
-    attachTaskEvents(taskItem);
+    const newTask = createTaskObject(taskText);
+    tasks.push(newTask);
 
-    // Trigger entry animation
-    requestAnimationFrame(() => {
-        taskItem.classList.remove("adding");
-    });
+    saveTasks();
+    renderTasks();
 
     todoInput.value = "";
-    taskCount++;
-    updateTaskStatus();
+    todoInput.focus();
 }
 
 /* Add task on button click */
@@ -195,5 +231,6 @@ todoInput.addEventListener("keydown", function (event) {
 /* Clear error as user starts typing */
 todoInput.addEventListener("input", clearError);
 
-/* Set the correct status when the page first loads */
-updateTaskStatus();
+/* Initial page load */
+loadTasks();
+renderTasks();

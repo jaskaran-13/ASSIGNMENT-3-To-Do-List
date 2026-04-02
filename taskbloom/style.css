@@ -221,3 +221,12 @@ body {
         width: 100%;
     }
 }
+/* Validation message */
+#error-message {
+    min-height: 24px;
+    margin-bottom: 10px;
+    color: #dc2626;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-align: center;
+}

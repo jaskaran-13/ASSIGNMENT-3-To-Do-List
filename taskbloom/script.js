@@ -7,6 +7,7 @@ const todoInput = document.getElementById("todo-input");
 const addBtn = document.getElementById("add-btn");
 const todoList = document.getElementById("todo-list");
 const taskStatus = document.getElementById("task-status");
+const errorMessage = document.getElementById("error-message");
 
 // Track total number of tasks currently displayed
 let taskCount = 0;
@@ -22,6 +23,21 @@ function updateTaskStatus() {
     } else {
         taskStatus.textContent = `You have ${taskCount} tasks.`;
     }
+}
+
+/**
+ * Show an inline validation message
+ * @param {string} message
+ */
+function showError(message) {
+    errorMessage.textContent = message;
+}
+
+/**
+ * Clear validation message
+ */
+function clearError() {
+    errorMessage.textContent = "";
 }
 
 /**
@@ -119,9 +135,11 @@ function addTask() {
     const taskText = todoInput.value.trim();
 
     if (taskText === "") {
-        alert("Please enter a task.");
+        showError("Please enter a task before adding.");
         return;
     }
+
+    clearError();
 
     const taskItem = createTaskElement(taskText);
     todoList.appendChild(taskItem);
@@ -132,8 +150,18 @@ function addTask() {
     updateTaskStatus();
 }
 
-// Add click event to the Add Task button
+/* Add task on button click */
 addBtn.addEventListener("click", addTask);
 
-// Set the correct status when the page first loads
+/* Add task when Enter key is pressed */
+todoInput.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+        addTask();
+    }
+});
+
+/* Clear error as user starts typing */
+todoInput.addEventListener("input", clearError);
+
+/* Set the correct status when the page first loads */
 updateTaskStatus();

@@ -10,6 +10,7 @@ const taskStatus = document.getElementById("task-status");
 const pendingStatus = document.getElementById("pending-status");
 const completedStatus = document.getElementById("completed-status");
 const errorMessage = document.getElementById("error-message");
+const completeSound = document.getElementById("complete-sound");
 
 // Track total number of tasks currently displayed
 let taskCount = 0;
@@ -50,6 +51,16 @@ function clearError() {
 }
 
 /**
+ * Play the completion sound
+ */
+function playCompletionSound() {
+    completeSound.currentTime = 0;
+    completeSound.play().catch(() => {
+        // Ignore playback errors caused by browser autoplay restrictions
+    });
+}
+
+/**
  * Move a completed task to the bottom of the task list
  * @param {HTMLElement} taskItem
  */
@@ -84,6 +95,7 @@ function handleCheckboxChange(taskItem, checkbox) {
     if (checkbox.checked) {
         taskItem.classList.add("completed");
         moveCompletedToBottom(taskItem);
+        playCompletionSound();
     } else {
         taskItem.classList.remove("completed");
         moveActiveTaskUp(taskItem);

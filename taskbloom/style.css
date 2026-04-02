@@ -139,3 +139,14 @@ body {
     cursor: pointer;
     font-weight: bold;
 }
+/* Completed task styling */
+.todo-item.completed {
+    opacity: 0.85;
+    background-color: #ecfdf5;
+    border-color: #86efac;
+}
+
+.todo-item.completed .task-text {
+    text-decoration: line-through;
+    color: #6b7280;
+}

@@ -159,7 +159,13 @@ body {
     border-radius: 16px;
     padding: 16px 18px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        background 0.35s ease,
+        border-color 0.35s ease,
+        opacity 0.35s ease,
+        filter 0.35s ease;
 }
 
 .todo-item:hover {
@@ -190,7 +196,7 @@ body {
     line-height: 1.5;
     word-break: break-word;
     color: #1f2937;
-    transition: color 0.3s ease, transform 0.3s ease;
+    transition: color 0.35s ease, transform 0.35s ease;
 }
 
 /* Delete button */
@@ -216,9 +222,10 @@ body {
    Completed Task Styling
 =================================== */
 .todo-item.completed {
-    opacity: 0.88;
-    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
-    border-color: #86efac;
+    opacity: 0.9;
+    background: linear-gradient(135deg, #ecfdf5, #bbf7d0);
+    border-color: #4ade80;
+    filter: saturate(1.05);
 }
 
 .todo-item.completed .task-text {
@@ -234,6 +241,21 @@ body {
 
 .todo-item.completed .delete-btn:hover {
     box-shadow: 0 8px 18px rgba(16, 185, 129, 0.25);
+}
+
+/* ===================================
+   Task Animations
+=================================== */
+.todo-item.adding {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.98);
+}
+
+.todo-item.removing {
+    opacity: 0;
+    transform: translateX(30px) scale(0.96);
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+    border-color: #f87171;
 }
 
 /* ===================================
@@ -260,16 +282,4 @@ body {
     .delete-btn {
         width: 100%;
     }
-}
-/* ===================================
-   Task Animations
-=================================== */
-.todo-item.adding {
-    opacity: 0;
-    transform: translateY(-12px) scale(0.98);
-}
-
-.todo-item.removing {
-    opacity: 0;
-    transform: translateX(30px) scale(0.96);
 }

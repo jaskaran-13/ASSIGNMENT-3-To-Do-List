@@ -8,33 +8,36 @@
 /* Page background and font */
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background: linear-gradient(135deg, #dbeafe, #f5d0fe);
+    background: linear-gradient(135deg, #c4b5fd, #bfdbfe, #fbcfe8);
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     color: #1f2937;
+    padding: 20px;
 }
 
-/* Main app box */
+/* Main app card */
 .app-container {
-    width: 90%;
-    max-width: 700px;
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 18px;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    width: 100%;
+    max-width: 760px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    padding: 35px;
+    border-radius: 24px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
 }
 
 /* Header section */
 .app-header {
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
 }
 
 .app-header h1 {
-    font-size: 2.4rem;
-    margin-bottom: 8px;
+    font-size: 2.8rem;
+    color: #4c1d95;
+    margin-bottom: 10px;
 }
 
 .subtitle {
@@ -42,40 +45,58 @@ body {
     font-size: 1rem;
 }
 
-/* Input section */
+/* Input area */
 .todo-input-section {
     display: flex;
     gap: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
 }
 
 #todo-input {
     flex: 1;
-    padding: 14px;
-    border: 2px solid #d1d5db;
-    border-radius: 10px;
+    padding: 15px 16px;
+    border: 2px solid #ddd6fe;
+    border-radius: 12px;
     font-size: 1rem;
+    background-color: #f9fafb;
+    transition: 0.3s ease;
     outline: none;
 }
 
-#add-btn {
-    padding: 14px 20px;
-    border: none;
-    border-radius: 10px;
-    background-color: #8b5cf6;
-    color: white;
-    font-size: 1rem;
-    cursor: pointer;
+#todo-input:focus {
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
 }
 
-/* Info section */
+#add-btn {
+    padding: 15px 22px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #8b5cf6, #6366f1);
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+#add-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.95;
+}
+
+/* Info area */
 .todo-info {
-    margin-bottom: 20px;
-    font-size: 0.95rem;
+    margin-bottom: 22px;
+    font-size: 0.98rem;
     color: #4b5563;
+    text-align: center;
 }
 
 /* Task list */
 #todo-list {
     list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }

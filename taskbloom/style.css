@@ -98,6 +98,18 @@ body {
 }
 
 /* ===================================
+   Validation Message
+=================================== */
+#error-message {
+    min-height: 24px;
+    margin-bottom: 10px;
+    color: #dc2626;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* ===================================
    Info Area
 =================================== */
 .todo-info {
@@ -123,6 +135,7 @@ body {
     font-weight: 700;
     color: #4338ca;
 }
+
 /* ===================================
    Task List
 =================================== */
@@ -146,7 +159,7 @@ body {
     border-radius: 16px;
     padding: 16px 18px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
 }
 
 .todo-item:hover {
@@ -177,6 +190,7 @@ body {
     line-height: 1.5;
     word-break: break-word;
     color: #1f2937;
+    transition: color 0.3s ease, transform 0.3s ease;
 }
 
 /* Delete button */
@@ -202,14 +216,24 @@ body {
    Completed Task Styling
 =================================== */
 .todo-item.completed {
-    opacity: 0.85;
-    background-color: #ecfdf5;
+    opacity: 0.88;
+    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
     border-color: #86efac;
 }
 
 .todo-item.completed .task-text {
     text-decoration: line-through;
-    color: #6b7280;
+    text-decoration-thickness: 2px;
+    color: #4b5563;
+    transform: scale(0.99);
+}
+
+.todo-item.completed .delete-btn {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.todo-item.completed .delete-btn:hover {
+    box-shadow: 0 8px 18px rgba(16, 185, 129, 0.25);
 }
 
 /* ===================================
@@ -236,13 +260,4 @@ body {
     .delete-btn {
         width: 100%;
     }
-}
-/* Validation message */
-#error-message {
-    min-height: 24px;
-    margin-bottom: 10px;
-    color: #dc2626;
-    font-size: 0.95rem;
-    font-weight: 600;
-    text-align: center;
 }

@@ -66,14 +66,29 @@ function handleCheckboxChange(taskItem, checkbox) {
 }
 
 /**
+ * Delete a task item from the list
+ * @param {HTMLElement} taskItem
+ */
+function deleteTask(taskItem) {
+    taskItem.remove();
+    taskCount--;
+    updateTaskStatus();
+}
+
+/**
  * Attach event listeners to an individual task item
  * @param {HTMLElement} taskItem
  */
 function attachTaskEvents(taskItem) {
     const checkbox = taskItem.querySelector(".task-checkbox");
+    const deleteBtn = taskItem.querySelector(".delete-btn");
 
     checkbox.addEventListener("change", function () {
         handleCheckboxChange(taskItem, checkbox);
+    });
+
+    deleteBtn.addEventListener("click", function () {
+        deleteTask(taskItem);
     });
 }
 

@@ -1,14 +1,18 @@
-// Get important elements from the page
+// ===============================
+// TaskBloom To-Do App JavaScript
+// ===============================
+
+// Select important DOM elements
 const todoInput = document.getElementById("todo-input");
 const addBtn = document.getElementById("add-btn");
 const todoList = document.getElementById("todo-list");
 const taskStatus = document.getElementById("task-status");
 
-// Track number of tasks
+// Track total number of tasks currently displayed
 let taskCount = 0;
 
 /**
- * Updates the task status text based on task count
+ * Update the text showing how many tasks exist
  */
 function updateTaskStatus() {
     if (taskCount === 0) {
@@ -21,54 +25,64 @@ function updateTaskStatus() {
 }
 
 /**
- * Moves completed tasks to the bottom of the list
+ * Move a completed task to the bottom of the task list
+ * @param {HTMLElement} taskItem
  */
 function moveCompletedToBottom(taskItem) {
     todoList.appendChild(taskItem);
 }
 
 /**
- * Adds checkbox and delete button events to a task item
+ * Move an active task above the first completed task
+ * @param {HTMLElement} taskItem
+ */
+function moveActiveTaskUp(taskItem) {
+    const allTasks = Array.from(todoList.children);
+
+    const firstCompletedTask = allTasks.find(task =>
+        task.classList.contains("completed")
+    );
+
+    if (firstCompletedTask) {
+        todoList.insertBefore(taskItem, firstCompletedTask);
+    } else {
+        todoList.appendChild(taskItem);
+    }
+}
+
+/**
+ * Handle checkbox state changes for a task
+ * @param {HTMLElement} taskItem
+ * @param {HTMLInputElement} checkbox
+ */
+function handleCheckboxChange(taskItem, checkbox) {
+    if (checkbox.checked) {
+        taskItem.classList.add("completed");
+        moveCompletedToBottom(taskItem);
+    } else {
+        taskItem.classList.remove("completed");
+        moveActiveTaskUp(taskItem);
+    }
+}
+
+/**
+ * Attach event listeners to an individual task item
  * @param {HTMLElement} taskItem
  */
 function attachTaskEvents(taskItem) {
     const checkbox = taskItem.querySelector(".task-checkbox");
 
     checkbox.addEventListener("change", function () {
-        if (checkbox.checked) {
-            taskItem.classList.add("completed");
-            moveCompletedToBottom(taskItem);
-        } else {
-            taskItem.classList.remove("completed");
-
-            // Move unchecked task above completed tasks
-            const allTasks = Array.from(todoList.children);
-            const firstCompleted = allTasks.find(task =>
-                task.classList.contains("completed")
-            );
-
-            if (firstCompleted) {
-                todoList.insertBefore(taskItem, firstCompleted);
-            } else {
-                todoList.appendChild(taskItem);
-            }
-        }
+        handleCheckboxChange(taskItem, checkbox);
     });
 }
 
 /**
- * Creates a new task item and adds it to the list
+ * Create a new task element
+ * @param {string} taskText
+ * @returns {HTMLElement}
  */
-function addTask() {
-    const taskText = todoInput.value.trim();
-
-    // Prevent empty tasks
-    if (taskText === "") {
-        alert("Please enter a task.");
-        return;
-    }
-
-    // Create task item
+function createTaskElement(taskText) {
     const li = document.createElement("li");
     li.className = "todo-item";
 
@@ -80,22 +94,31 @@ function addTask() {
         <button class="delete-btn">Delete</button>
     `;
 
-    // Add task to list
-    todoList.appendChild(li);
+    return li;
+}
 
-    // Add behavior to checkbox
-    attachTaskEvents(li);
+/**
+ * Add a task to the list
+ */
+function addTask() {
+    const taskText = todoInput.value.trim();
 
-    // Clear input field
+    if (taskText === "") {
+        alert("Please enter a task.");
+        return;
+    }
+
+    const taskItem = createTaskElement(taskText);
+    todoList.appendChild(taskItem);
+    attachTaskEvents(taskItem);
+
     todoInput.value = "";
-
-    // Update task count
     taskCount++;
     updateTaskStatus();
 }
 
-// Add button click event
+// Add click event to the Add Task button
 addBtn.addEventListener("click", addTask);
 
-// Initialize task status on page load
+// Set the correct status when the page first loads
 updateTaskStatus();

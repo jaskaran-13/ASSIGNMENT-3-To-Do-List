@@ -93,13 +93,17 @@ function handleCheckboxChange(taskItem, checkbox) {
 }
 
 /**
- * Delete a task item from the list
+ * Delete a task item from the list with animation
  * @param {HTMLElement} taskItem
  */
 function deleteTask(taskItem) {
-    taskItem.remove();
-    taskCount--;
-    updateTaskStatus();
+    taskItem.classList.add("removing");
+
+    setTimeout(() => {
+        taskItem.remove();
+        taskCount--;
+        updateTaskStatus();
+    }, 300);
 }
 
 /**
@@ -126,7 +130,7 @@ function attachTaskEvents(taskItem) {
  */
 function createTaskElement(taskText) {
     const li = document.createElement("li");
-    li.className = "todo-item";
+    li.className = "todo-item adding";
 
     li.innerHTML = `
         <label class="task-left">
@@ -155,6 +159,11 @@ function addTask() {
     const taskItem = createTaskElement(taskText);
     todoList.appendChild(taskItem);
     attachTaskEvents(taskItem);
+
+    // Trigger entry animation
+    requestAnimationFrame(() => {
+        taskItem.classList.remove("adding");
+    });
 
     todoInput.value = "";
     taskCount++;

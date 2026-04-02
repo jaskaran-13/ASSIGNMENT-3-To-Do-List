@@ -261,3 +261,15 @@ body {
         width: 100%;
     }
 }
+/* ===================================
+   Task Animations
+=================================== */
+.todo-item.adding {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.98);
+}
+
+.todo-item.removing {
+    opacity: 0;
+    transform: translateX(30px) scale(0.96);
+}

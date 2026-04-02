@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Basic page setup -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskBloom</title>
+
+    <!-- External CSS file -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Main application wrapper -->
+    <div class="app-container">
+        <!-- Header section -->
+        <header class="app-header">
+            <h1>TaskBloom</h1>
+            <p class="subtitle">Organize your day, one task at a time.</p>
+        </header>
+
+        <!-- Input section for adding new tasks -->
+        <section class="todo-input-section">
+            <input 
+                type="text" 
+                id="todo-input" 
+                placeholder="Enter a new task..."
+                aria-label="Enter a new task"
+            >
+            <button id="add-btn">Add Task</button>
+        </section>
+
+        <!-- Info section -->
+        <section class="todo-info">
+            <p id="task-status">You have 0 tasks.</p>
+        </section>
+
+        <!-- Container where tasks will appear -->
+        <section class="todo-list-section">
+            <ul id="todo-list"></ul>
+        </section>
+    </div>
+
+    <!-- External JavaScript file -->
+    <script src="script.js"></script>
+</body>
+</html>
